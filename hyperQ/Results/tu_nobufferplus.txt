@@ -1,0 +1,6 @@
+single thread time = 111
+qvm time = 16
+speedup =  6.9375
+baseline average utilization = 0.0325821341297855
+qvm average utilization = 0.23665791776027997
+utilization improvement = 7.263425925925926
