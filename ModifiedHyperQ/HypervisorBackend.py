@@ -549,6 +549,7 @@ class HypervisorBackend(BackendV2):
                 if(curr_ct_score == 0):
                     return optimized_selection
                 
+                
                 curr = qVM_queue[0]
                 neighbors = []
                 #add top neighbor
