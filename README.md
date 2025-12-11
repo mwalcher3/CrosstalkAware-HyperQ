@@ -13,8 +13,8 @@ Our three experimental runs are included in the `Results/` directory.
 For general usage instructions, refer to [https://github.com/1640675651/HyperQ](https://github.com/1640675651/HyperQ). 
 
 Changes in usage: 
-- Set `buffer_qubits=False` in elastic_qvm creation when omitting qubit separations between circuits through the input coupling map.
-- Define crosstalk-sensitive horizontal and vertical qubit pairs for a specific input coupling maps and pass into HypervisorBackend `ct_h` `ct_v` attributes. 
+- Set `buffer_qubits=False` in elastic_qvm creation when omitting qubit separations between circuits in the input coupling map.
+- Define crosstalk-sensitive horizontal and vertical qubit pairs for input coupling maps and pass into HypervisorBackend `ct_h` `ct_v` attributes. 
   
 ### License
 The code in `ModifiedHyperQ/` remains under the original license.
