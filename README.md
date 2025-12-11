@@ -10,7 +10,7 @@ We modified the space scheduling to account for program crosstalk noise compatib
 Our three experimental runs are included in the `Results/` directory. 
 
 ### Usage
-For general usage instructions, refer to [https://github.com/1640675651/HyperQ](https://github.com/1640675651/HyperQ). 
+For general instructions, refer to [https://github.com/1640675651/HyperQ](https://github.com/1640675651/HyperQ). 
 
 Changes in usage: 
 - Set `buffer_qubits=False` in elastic_qvm creation when omitting qubit separations between circuits in the input coupling map.
