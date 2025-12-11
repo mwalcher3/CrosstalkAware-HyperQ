@@ -220,17 +220,16 @@ class HypervisorBackend(BackendV2):
                         return False
             return True
         
-        #get the executable selection entry associated with i and j positions 
+        #Get the executable selection entry associated with i and j positions.
         def get_exec(i, j, selec):
             for execi, r, c, h, w, v in selec:
                 for a in range(h):
                     for b in range(w):
                         if r +a == i and c +b == j:
-                            #return executables[execi[0]].qc[v]
                             return execi, r, c, h, w, v
             return None
         
-        #get index of executable in a selection associated with i and j positions
+        #Get index of executable in a selection associated with i and j positions.
         def get_selc_ind(i, j, selec):
             for ind in range(len(selec)):
                 for a in range(selec[ind][3]):
@@ -239,7 +238,7 @@ class HypervisorBackend(BackendV2):
                             return ind
             return None
         
-        #sum number of multi qubit gates for an executable
+        #Sum number of multi qubit gates for an executable.
         def multi_qubit_gate_count(exe):
             res = 0
             for node in circuit_to_dag(exe).topological_op_nodes():
@@ -248,10 +247,14 @@ class HypervisorBackend(BackendV2):
             return res
 
 
+        '''
+        Compute time steps of an executable specific to a mapping.
+        Cache gate durations of specific backend qubits.
+        @dag: Qiskit dag representation of an executable.
+        @mapping: Mapping of the executable.
+        Return a list of timesteps: (operation, virtual qubits in operation, operation start time, operation end time).
+        '''
         gate_duration_cache = {}
-
-        #compute time steps of an executable given a qVM mapping
-        #cache gate durations of specific backend qubits
         def compute_timeline(dag, mapping):
             qubit_available = {} 
             #(node.op.name, qubits, start_time, end_time)
@@ -309,16 +312,29 @@ class HypervisorBackend(BackendV2):
                 timeline.append((node.op.name, virt_qubits, start_time, end_time))
             return timeline
         
-        #compute hash value of a executable for the cache
+        #Compute hash value of a executable for the cache.
         def get_circ_hash(circ):
             if not hasattr(circ, "_cached_hash"):
                 circ._cached_hash = hash(qasm3.dumps(circ))
             return circ._cached_hash
          
          
+        '''
+        Count crosstalk between two executables according to a 
+        horizontal or vertical crosstalk sensitivity list.
+
+        Cache crosstalk scores. 
+        @exe1: First executable.
+        @m1: Mapping of the first executable.
+        @dim1: A dimension of the first executable,
+         same dimension as the sensitivity list.
+        @exe2: Second executable.
+        @m2: Mapping of the second executable.
+        @dim2: A dimension of the second executable, 
+        same dimension as the sensitivity list.
+        Return crosstalk score.
+        '''
         ct_cache = {}
-        #count crosstalk between two executables with a list of crosstalk sensitive qubit pairs
-        #cache crosstalk scores
         def cnt_crosstalk(exe1, m1, dim1, exe2, m2, dim2, ct_sens): 
             # if(dim1 > 1):
             #     print('mapping of scaled qVM', m1)
@@ -369,7 +385,16 @@ class HypervisorBackend(BackendV2):
             ct_cache[key] = count
             return count
         
-        #sum crosstalk scores of a qVM at a certain position with its neighbors. 
+        
+        '''
+        Sum crosstalk scores of a qVM at a certain position with its neighbors. 
+        
+        @i: First position index.
+        @j: Second position index.
+        @version: Version, relevant for scaled qVMs. 
+        @exe: Executable of the qVM.
+        Return crosstalk score associated with this placement. 
+        '''
         def single_ct_score(i, j, version, n, m, exe):
             score_crosstalk = 0
             m1 = self.get_mapping(i, j, n, m)
@@ -395,7 +420,11 @@ class HypervisorBackend(BackendV2):
                 score_crosstalk += cnt_crosstalk(exe.qc[version], m1, m, executables[execi[0]].qc[v], m2, w, self.ct_h)
             return score_crosstalk
         
-        #sum all crosstalk scores for a certain mapping. 
+        '''
+        Sum all crosstalk scores for a mapping of one batch. 
+        @Selec: A mapping of qVMs.
+        Return total crosstalk score.
+        '''
         def total_ct_score(selec):
             ct = 0
             h = len(region_status)
@@ -430,7 +459,7 @@ class HypervisorBackend(BackendV2):
             #                     return i, j, v
             #     return None, None, None
 
-            #optimize initial mapping 
+            #Optimize initial mapping.
             if is_sensitive(exe):
                 min_crosstalk = -1
                 ret_i, ret_j, ret_v = None, None, None
@@ -441,7 +470,7 @@ class HypervisorBackend(BackendV2):
                             # ensure all qvms used are good
                             if fit1(i, j, n, m, region_status) and fit_bad_cnt(i, j, n, m, bad_qvm_mark) == 0:
                                 # Find lowest crosstalk placement on the grid. 
-                                # Only consider regions next to border or other qVMs to avoid internal fragmentation
+                                # Only consider regions next to border or other qVMs to avoid internal fragmentation.
                                 if i == 0 or j == 0 or (i+n) > 3 or (j+m) > 3 or ((i+n) < 3 and region_status[i+n][j]) >= 1 or ((j+m) < 3 and region_status[i][j+m]) >= 1 or (i > 0 and region_status[i-1][j]) >= 1 or ( j > 0 and region_status[i][j-1] >= 1):
                                     score_crosstalk = single_ct_score(i, j, v, n, m, exe)
                                     if min_crosstalk == -1 or score_crosstalk < min_crosstalk:
@@ -535,14 +564,14 @@ class HypervisorBackend(BackendV2):
                 if op_cnt < sensitivity_threshold:
                     return True
             return False
-        
-        # selection entries: ([executable indexes], starting row, starting col, height, width, version) 
+
         '''
-        Greedily optimize qVM mapping on the grid after a batch is initially mapped. 
         Iteratively swaps qVMs with neighbors on the grid in cases where an exchange reduces the crosstalk score.
-        This algorithm is derived from the Greedy Mapping Optimizer in the research of 
+        This algorithm is derived from the Greedy Mapping Optimizer in the research by 
         Soheil Khadirsharbiyani, Movahhed Sadeghi, Mostafa Eghbali Zarch†, Jagadish Kotra and Mahmut Taylan Kandemir
         https://ieeexplore.ieee.org/document/10234256
+        selection entries: ([executable indexes], starting row, starting col, height, width, version) 
+        Returns optimized initial selection
         '''
         def iterative_schedule_optimiser():
             optimized_selection = selection

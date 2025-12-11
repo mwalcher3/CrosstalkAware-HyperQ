@@ -129,7 +129,7 @@ hc_backend= [[[6, 25], [10, 29]],
 vc_backend = [[[21, 34, 40], [25, 35, 44], [29, 36, 48]],
                [[59, 72, 78], [63, 73, 82], [67, 74, 86]]]
 
-#crosstalk sensitive virtual qubits pairs, specific to the backends coupling map
+#Crosstalk sensitive virtual qubits pairs, specific to the backends coupling map.
 #horizontal 
 #first tuple entry: left qVM, second entry: right qVM 
 ct_h = [(2, 0), (6, 4)]
@@ -139,6 +139,10 @@ ct_v = []
 
 #no buffer horizontal
 #ct_h = [(7, 0), (6, 8)]
+
+#True if buffer qubits are present in coupling map.
+#Relevant for scaled virtual machines creation.
+buffer_qubits = True
 
 # create hypervisor backend
 hypervisor = HypervisorBackend(backend, vms, hc_backend, vc_backend, ct_h, ct_v)
@@ -163,7 +167,7 @@ circ_list = circ_list_small + circ_list_medium
 
 exec_list = []
 for i, circ in enumerate(circ_list):
-    evm = elastic_vm(circ.num_qubits, basis_gates, hc, vc, shared_up, shared_down, vm_coupling_map, allowed_dimensions, buffer_qubits = True)
+    evm = elastic_vm(circ.num_qubits, basis_gates, hc, vc, shared_up, shared_down, vm_coupling_map, allowed_dimensions, buffer_qubits)
     #print('transpiling', circ_name_list[i])
     exe = vm_executable(circ, evm, True)
     print(exe.qc[0].num_qubits)
