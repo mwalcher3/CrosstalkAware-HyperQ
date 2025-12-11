@@ -2,7 +2,7 @@
 This repository is a modified version of the Artifact for OSDI'25 "Quantum Virtual Machines" from Runzhou Tao, Hongzheng Zhu, Jason Nieh, Jianan Yao and Ronghui Gu. 
 
 ### Changes
-We changed the space scheduling accounting for program crosstalk noise compatibilities to improve fidelity with:
+We modified the space scheduling to account for program crosstalk noise compatibilities improving fidelity with:
 - Optimized initial mapping
 - Implementation of a derived version of the iterative mapping optimization algorithm in [TRIM: crossTalk-awaRe qubIt Mapping for multiprogrammed quantum systems](https://ieeexplore.ieee.org/document/10234256).
 
@@ -19,4 +19,4 @@ Changes in usage:
 ### License
 The code in `ModifiedHyperQ/` remains under the original license.
 
-Note: Removing buffer qubits as implemented here might not be working properly as it did not increase the utilization in our results.
+Note: Removing buffer qubits as implemented in `ModifiedHyperQ/benchmark.py` might not work properly as it did not increase the utilization in our results.
