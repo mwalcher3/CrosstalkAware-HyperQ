@@ -1,5 +1,5 @@
 ## Crosstalk Aware HyperQ
-This repository is a modified version of the Artifact for OSDI'25 "Quantum Virtual Machines" from Runzhou Tao, Hongzheng Zhu, Jason Nieh, Jianan Yao, and Ronghui Gu. 
+This repository is a modified version of the Artifact for OSDI'25 "Quantum Virtual Machines" by Runzhou Tao, Hongzheng Zhu, Jason Nieh, Jianan Yao, and Ronghui Gu. 
 
 ### Changes
 We modified the space scheduling to account for program crosstalk noise compatibilities, improving fidelity with:
