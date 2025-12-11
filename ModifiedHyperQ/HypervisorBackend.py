@@ -354,9 +354,11 @@ class HypervisorBackend(BackendV2):
                             q1s = q1 + vm_size * (dim1 -1)
                             q2s = q2 + vm_size * (dim2 -1)
                             if (q1s in time1[i][1] and q2s in time2[j][1]):
+                                #add 5 to the score in cases of two multiqubit gates
                                 if len(time1[i][1]) > 1 and len(time2[j][1]) > 1:
                                    # print('plus 5', time1[i][1], time2[j][1])
                                     count += 5
+                                #add 1 to the score in cases of one multiqubit gate
                                 else:
                                    # print('plus 1', time1[i][1], time2[j][1])
                                     count += 1
@@ -394,7 +396,7 @@ class HypervisorBackend(BackendV2):
                 score_crosstalk += cnt_crosstalk(exe.qc[version], m1, m, executables[execi[0]].qc[v], m2, w, self.ct_h)
             return score_crosstalk
         
-        #sum all crosstalk cases for a certain mapping. 
+        #sum all crosstalk scores for a certain mapping. 
         def total_ct_score(selec):
             ct = 0
             h = len(region_status)
@@ -536,7 +538,13 @@ class HypervisorBackend(BackendV2):
             return False
         
         # selection entries: ([executable indexes], starting row, starting col, height, width, version) 
-        # greedily optimize qVM mapping on the grid after a batch is initially mapped
+        '''
+        Greedily optimize qVM mapping on the grid after a batch is initially mapped. 
+        Iteratively swaps qVMs with neighbors on the grid in cases where an exchange reduces the crosstalk score.
+        This algorithm is derived from the Greedy Mapping Optimizer in the research of 
+        Soheil Khadirsharbiyani, Movahhed Sadeghi, Mostafa Eghbali Zarch†, Jagadish Kotra and Mahmut Taylan Kandemir
+        https://ieeexplore.ieee.org/document/10234256
+        '''
         def iterative_schedule_optimiser():
             optimized_selection = selection
             curr_ct_score = total_ct_score(optimized_selection)
@@ -549,7 +557,7 @@ class HypervisorBackend(BackendV2):
                 if(curr_ct_score == 0):
                     return optimized_selection
                 
-                
+
                 curr = qVM_queue[0]
                 neighbors = []
                 #add top neighbor
