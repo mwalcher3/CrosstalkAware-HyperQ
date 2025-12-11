@@ -349,7 +349,6 @@ class HypervisorBackend(BackendV2):
                         #check qubit position in coupling map
                         for q1, q2 in ct_sens:
                             #handle scaled virtual machines
-                            #TODO account for connection qubits
                             vm_size = len(self.vms[0][0])
                             q1s = q1 + vm_size * (dim1 -1)
                             q2s = q2 + vm_size * (dim2 -1)
@@ -591,7 +590,7 @@ class HypervisorBackend(BackendV2):
                         new_selection[0] = tuple(b)
                    #assert len(new_selection) == len(optimized_selection)
                     new_ct_score = total_ct_score(new_selection)     
-                    #compare old and new                     
+                    #compare old and new score                     
                     if new_ct_score < curr_ct_score:
                         optimized_selection = new_selection 
                         curr_ct_score = new_ct_score

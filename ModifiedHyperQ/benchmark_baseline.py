@@ -54,7 +54,7 @@ log_file = open(output_path + 'workload' + workload_id + '.txt', 'a')
 sys.stdout = Tee(sys.stdout, log_file)
 
 # get real backend
-service = QiskitRuntimeService(channel="ibm_quantum_platform", token="_kmpQ--EeAoDiHFrDhNgmA2G-GKdQh-nXSPoqHPcfqtZ")
+service = QiskitRuntimeService(channel="ibm_quantum_platform", token="")
 
 real_backend = service.backend('ibm_torino')
 real_sampler = Sampler(mode=real_backend)

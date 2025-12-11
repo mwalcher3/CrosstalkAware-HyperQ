@@ -18,7 +18,7 @@ def count_to_prob(counts: dict, shots: int):
         counts[k] /= shots
 
 # hz2915@columbia
-service = QiskitRuntimeService(channel="ibm_quantum_platform", token="_kmpQ--EeAoDiHFrDhNgmA2G-GKdQh-nXSPoqHPcfqtZ")
+service = QiskitRuntimeService(channel="ibm_quantum_platform", token="")
 
 # get QASMbenchmark object
 path = "../QASMBench"

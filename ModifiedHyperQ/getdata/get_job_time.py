@@ -23,7 +23,7 @@ def read_workload_baseline_tuple(filename, encoding = 'utf-8'):
         ret.append((jobid, name))
     return ret
 
-service = QiskitRuntimeService(channel="ibm_quantum_platform", token="_kmpQ--EeAoDiHFrDhNgmA2G-GKdQh-nXSPoqHPcfqtZ")
+service = QiskitRuntimeService(channel="ibm_quantum_platform", token="")
 
 if len(sys.argv) < 2:
     print('need workload file name')

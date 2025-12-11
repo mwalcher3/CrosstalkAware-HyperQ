@@ -29,9 +29,9 @@ def read_workload_baseline(filename, encoding = 'utf-8') -> {'name': 'jobid'}:
     return ret
 
 
-service1 = QiskitRuntimeService(channel="ibm_quantum_platform", token="_kmpQ--EeAoDiHFrDhNgmA2G-GKdQh-nXSPoqHPcfqtZ")
+service1 = QiskitRuntimeService(channel="ibm_quantum_platform", token="")
 
-service2 = QiskitRuntimeService(channel="ibm_quantum_platform", token="_kmpQ--EeAoDiHFrDhNgmA2G-GKdQh-nXSPoqHPcfqtZ")
+service2 = QiskitRuntimeService(channel="ibm_quantum_platform", token="")
 
 
 # small

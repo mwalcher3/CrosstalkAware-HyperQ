@@ -28,7 +28,7 @@ if len(sys.argv) != 2:
     print('usage: get_result_baseline.py workload_file')
 workload_path = sys.argv[1]
 
-service = QiskitRuntimeService(channel="ibm_quantum_platform", token="_kmpQ--EeAoDiHFrDhNgmA2G-GKdQh-nXSPoqHPcfqtZ")
+service = QiskitRuntimeService(channel="ibm_quantum_platform", token="")
 
 baseline_id_name = read_workload_baseline(workload_path)
 baseline_jobs_list = list(service.job(i[0]) for i in baseline_id_name)
